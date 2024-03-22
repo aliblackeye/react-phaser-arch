@@ -3,9 +3,9 @@ import { Scene } from "phaser";
 import { Socket, io } from "socket.io-client";
 
 // Assets
-import background from "../assets/sky.png";
-import platform from "../assets/platform.png";
-import player from "../assets/characters/player.png";
+import background from "@/assets/sky.png";
+import platform from "@/assets/platform.png";
+import player from "@/assets/characters/player.png";
 
 export class GameScene extends Scene {
     // Socket

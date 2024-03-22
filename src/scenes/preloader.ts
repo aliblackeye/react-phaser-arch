@@ -1,7 +1,5 @@
 import { Scene } from "phaser";
 
-// Assets
-
 export class Preloader extends Scene {
     constructor() {
         super("Preloader");
