@@ -43,7 +43,7 @@ export class GameScene extends Scene {
     }
 
     create() {
-        this.socket = io("http://localhost:5000");
+        this.socket = io(import.meta.env.VITE_SOCKET_URL as string);
         this.otherPlayers = this.physics.add.group();
 
         this.socket.on("currentPlayers", (players) => {
