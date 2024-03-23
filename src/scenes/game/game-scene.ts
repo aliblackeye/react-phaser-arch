@@ -6,13 +6,18 @@ import { Socket, io } from "socket.io-client";
 import background from "@/assets/sky.png";
 import platform from "@/assets/platform.png";
 import player from "@/assets/characters/player.png";
+import { PlayerMovement } from "./scripts/player/player-movement";
 
 export class GameScene extends Scene {
+    // Scripts
+    private playerMovement: PlayerMovement;
+
     // Socket
     socket: Socket;
 
     // Variables
     playerId: string;
+    speed: number = 100;
 
     // Assets
     background: Phaser.GameObjects.Image;
@@ -47,7 +52,6 @@ export class GameScene extends Scene {
         this.otherPlayers = this.physics.add.group();
 
         this.socket.on("currentPlayers", (players) => {
-            console.log("Players: ", players);
             players.forEach((p: any) => {
                 if (p.playerId === this.socket.id) {
                     this.addPlayer(p);
@@ -79,72 +83,12 @@ export class GameScene extends Scene {
         });
 
         this.gameScript();
+
+        this.playerMovement = new PlayerMovement(this.socket);
     }
 
     update() {
-        this.movementController();
-    }
-
-    movementController() {
-        if (this.player == undefined) {
-            return;
-        }
-
-        const speed = 100;
-
-        if (this.keys.up.isDown || this.keys.w.isDown) {
-            this.player.setVelocityY(-speed);
-            this.player.anims.play("walk_up", true);
-            this.direction = "up";
-        } else if (this.keys.down.isDown || this.keys.s.isDown) {
-            this.player.setVelocityY(speed);
-            this.player.anims.play("walk_down", true);
-            this.direction = "down";
-        } else if (this.keys.left.isDown || this.keys.a.isDown) {
-            this.player.setFlipX(true);
-            this.player.setVelocityX(-speed);
-            this.player.anims.play("walk_left", true);
-            this.direction = "left";
-        } else if (this.keys.right.isDown || this.keys.d.isDown) {
-            this.player.setFlipX(false);
-            this.player.setVelocityX(speed);
-            this.player.anims.play("walk_right", true);
-            this.direction = "right";
-        } else {
-            this.player.setVelocity(0, 0);
-            console.log(this.direction);
-            switch (this.direction) {
-                case "left":
-                    this.player.anims.play("idle_left", true);
-                    break;
-                case "right":
-                    this.player.anims.play("idle_right", true);
-                    break;
-                case "up":
-                    this.player.anims.play("idle_up", true);
-                    break;
-                case "down":
-                    this.player.anims.play("idle_down", true);
-                    break;
-            }
-        }
-
-        const x = this.player.x;
-        const y = this.player.y;
-
-        const oldPosition = this.player.getData("oldPosition");
-
-        if (oldPosition && (x !== oldPosition.x || y !== oldPosition.y)) {
-            this.socket.emit("playerMovement", {
-                x,
-                y,
-            });
-        }
-
-        this.player.data.set("oldPosition", {
-            x: this.player.x,
-            y: this.player.y,
-        });
+        this.playerMovement.movementController();
     }
 
     addPlayer(player: any) {
@@ -163,6 +107,8 @@ export class GameScene extends Scene {
         ); // Oyuncunun collider konumunu ayarlayın
 
         this.playerId = player.playerId;
+
+        this.playerMovement.setPlayer(this.player, this.keys);
     }
 
     addOtherPlayer(player: any) {

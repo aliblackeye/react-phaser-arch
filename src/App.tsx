@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { IRefPhaserGame, PhaserGame } from "./PhaserGame";
 
 function App() {
@@ -9,6 +9,15 @@ function App() {
     /* const currentScene = (scene: Phaser.Scene) => {
         console.log("Current Scene: ", scene);
     }; */
+
+    // server açıkta durması için 5 dakikada bir istek atıyoruz
+    useEffect(() => {
+        setInterval(() => {
+            fetch("https://react-phaser-arch-server.onrender.com/")
+                .then((res) => res.json())
+                .then((data) => console.log(data));
+        }, 300000);
+    }, []);
 
     return (
         <div id="app">
