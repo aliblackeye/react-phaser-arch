@@ -25,8 +25,6 @@ export class GameScene extends Scene {
     // Statics
     platforms: Phaser.Physics.Arcade.StaticGroup;
 
-    // Input
-    direction: "left" | "right" | "idle" | "up" | "down";
     keys: any;
 
     // Players

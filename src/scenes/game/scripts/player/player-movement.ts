@@ -5,6 +5,7 @@ export class PlayerMovement {
     private keys: any;
     private speed: number = 100;
     private socket: Socket;
+    private direction: "left" | "right" | "idle" | "up" | "down" = "idle";
 
     constructor(socket: Socket) {
         this.socket = socket;
@@ -25,12 +26,22 @@ export class PlayerMovement {
         const velocity = { x: 0, y: 0 };
 
         // Yatay hareket
-        if (left.isDown || a.isDown) velocity.x = -speed;
-        else if (right.isDown || d.isDown) velocity.x = speed;
+        if (left.isDown || a.isDown) {
+            velocity.x = -speed;
+            this.direction = "left";
+        } else if (right.isDown || d.isDown) {
+            velocity.x = speed;
+            this.direction = "right";
+        }
 
         // Dikey hareket
-        if (up.isDown || w.isDown) velocity.y = -speed;
-        else if (down.isDown || s.isDown) velocity.y = speed;
+        if (up.isDown || w.isDown) {
+            velocity.y = -speed;
+            this.direction = "up";
+        } else if (down.isDown || s.isDown) {
+            velocity.y = speed;
+            this.direction = "down";
+        }
 
         this.setPlayerVelocity(velocity.x, velocity.y);
         this.playPlayerAnimation(velocity);
@@ -48,16 +59,27 @@ export class PlayerMovement {
         if (!player) return;
 
         const { x, y } = velocity;
+        let animationKey = "";
 
         if (x !== 0 || y !== 0) {
-            if (x > 0) player.anims.play("walk_right", true);
-            else if (x < 0) player.anims.play("walk_left", true);
-            else if (y > 0) player.anims.play("walk_down", true);
-            else player.anims.play("walk_up", true);
+            animationKey =
+                x !== 0
+                    ? x > 0
+                        ? "walk_right"
+                        : "walk_left"
+                    : y > 0
+                    ? "walk_down"
+                    : "walk_up";
         } else {
-            if (player.flipX) player.anims.play("idle_left", true);
-            else player.anims.play("idle_right", true);
+            if (this.direction === "right" || this.direction === "left") {
+                animationKey = `idle_${this.direction}`;
+            } else {
+                animationKey =
+                    this.direction === "up" ? "idle_up" : "idle_down";
+            }
         }
+
+        player.anims.play(animationKey, true);
 
         if (x > 0) player.setFlipX(false);
         else if (x < 0) player.setFlipX(true);
