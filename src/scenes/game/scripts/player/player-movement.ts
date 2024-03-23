@@ -19,18 +19,18 @@ export class PlayerMovement {
         if (!this.player || !this.keys) return;
 
         const { keys } = this;
-        const { left, right, up, down } = keys;
+        const { left, right, up, down, w, a, s, d } = keys;
         const speed = this.speed;
 
         const velocity = { x: 0, y: 0 };
 
         // Yatay hareket
-        if (left.isDown) velocity.x = -speed;
-        else if (right.isDown) velocity.x = speed;
+        if (left.isDown || a.isDown) velocity.x = -speed;
+        else if (right.isDown || d.isDown) velocity.x = speed;
 
         // Dikey hareket
-        if (up.isDown) velocity.y = -speed;
-        else if (down.isDown) velocity.y = speed;
+        if (up.isDown || w.isDown) velocity.y = -speed;
+        else if (down.isDown || s.isDown) velocity.y = speed;
 
         this.setPlayerVelocity(velocity.x, velocity.y);
         this.playPlayerAnimation(velocity);
