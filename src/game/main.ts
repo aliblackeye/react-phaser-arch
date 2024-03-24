@@ -1,11 +1,10 @@
-import { Boot } from "./scenes/boot";
-import { GameOverScene } from "./scenes/game-over/game-over-scene";
-import { GameScene } from "./scenes/game/game-scene";
-import { MainMenuScene } from "./scenes/main-menu/main-menu-scene";
-import Phaser from "phaser";
-import { Preloader } from "./scenes/preloader";
+// Scenes
+import { Boot } from "@/Game/Scenes/Boot";
+import { Preloader } from "@/Game/Scenes/Preloader";
+import { MainMenu } from "@/Game/Scenes/MainMenu/MainMenu";
+import { Game } from "@/Game/Scenes/Game/Game";
+import { GameOver } from "@/Game/Scenes/GameOver/GameOver";
 
-//  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO, // Otomatik olarak WebGL veya Canvas kullanarak oyunu başlatır
@@ -17,6 +16,9 @@ const config: Phaser.Types.Core.GameConfig = {
             gravity: { y: 0, x: 0 },
         },
     },
+    dom: {
+        createContainer: true,
+    },
     scale: {
         mode: Phaser.Scale.FIT,
         parent: "game-container",
@@ -24,7 +26,7 @@ const config: Phaser.Types.Core.GameConfig = {
         width: 1920,
         height: 1080,
     },
-    scene: [Boot, Preloader, MainMenuScene, GameScene, GameOverScene],
+    scene: [Boot, Preloader, MainMenu, Game, GameOver],
 };
 
 const StartGame = (parent: string) => {

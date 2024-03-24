@@ -8,6 +8,8 @@ export class Preloader extends Scene {
     init() {
         // Boot Scene'de bu resmi yüklediğimiz için burada görüntüleyebiliriz
         this.add.image(0, 0, "menuBg").setOrigin(0);
+
+        this.load.html("form", "@/ui/form.html");
     }
 
     preload() {

@@ -1,18 +1,18 @@
 /* import { EventBus } from "../EventBus"; */
 import { Scene } from "phaser";
-import { Socket, io } from "socket.io-client";
+import { Socket } from "socket.io-client";
 
 // Assets
 import background from "@/assets/map.png";
 import player from "@/assets/characters/player.png";
-import { PlayerMovement } from "./scripts/player/player-movement";
+import { PlayerMovement } from "./Scripts/Player/PlayerMovement";
 
-export class GameScene extends Scene {
+export class Game extends Scene {
+    // Socket
+    private socket: Socket;
+
     // Scripts
     private playerMovement: PlayerMovement;
-
-    // Socket
-    socket: Socket;
 
     // Variables
     width: number = 1920;
@@ -32,7 +32,11 @@ export class GameScene extends Scene {
     otherPlayers: Phaser.Physics.Arcade.Group;
 
     constructor() {
-        super("GameScene");
+        super("Game");
+    }
+
+    init() {
+        this.socket = this.registry.get("socket");
     }
 
     preload() {
@@ -44,7 +48,6 @@ export class GameScene extends Scene {
     }
 
     create() {
-        this.socket = io(import.meta.env.VITE_SOCKET_URL as string);
         this.otherPlayers = this.physics.add.group();
 
         this.socket.on("currentPlayers", (players) => {
