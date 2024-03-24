@@ -2,6 +2,7 @@
     "name": "template-react-ts",
     "description": "A Phaser 3 TypeScript project template that demonstrates React communication and uses Vite for bundling.",
     "version": "1.0.1",
+    "type": "module",
     "scripts": {
         "dev": "vite --config vite.config.ts",
         "start": "vite preview",
@@ -28,3 +29,4 @@
         "vite": "^5.1.4"
     }
 }
+

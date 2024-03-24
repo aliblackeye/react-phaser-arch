@@ -5,6 +5,8 @@ import { Socket } from "socket.io-client";
 // Assets
 import grass from "@/assets/Backgrounds/Grass.png";
 import player from "@/assets/Characters/Player.png";
+
+// Scripts
 import { PlayerMovement } from "./Scripts/Player/PlayerMovement";
 
 export class Game extends Scene {
