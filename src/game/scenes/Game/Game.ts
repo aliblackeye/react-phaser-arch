@@ -3,8 +3,8 @@ import { Scene } from "phaser";
 import { Socket } from "socket.io-client";
 
 // Assets
-import background from "@/assets/map.png";
-import player from "@/assets/characters/player.png";
+import grass from "@/assets/Backgrounds/Grass.png";
+import player from "@/assets/Characters/Player.png";
 import { PlayerMovement } from "./Scripts/Player/PlayerMovement";
 
 export class Game extends Scene {
@@ -22,7 +22,7 @@ export class Game extends Scene {
     speed: number = 100;
 
     // Assets
-    background: Phaser.GameObjects.Image;
+    grass: Phaser.GameObjects.Image;
 
     // Inputs
     keys: any;
@@ -40,7 +40,7 @@ export class Game extends Scene {
     }
 
     preload() {
-        this.load.image("background", background);
+        this.load.image("grass", grass);
         this.load.spritesheet("player", player, {
             frameWidth: 192,
             frameHeight: 192,
