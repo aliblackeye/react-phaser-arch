@@ -3,8 +3,7 @@ import { Scene } from "phaser";
 import { Socket, io } from "socket.io-client";
 
 // Assets
-import background from "@/assets/sky.png";
-import platform from "@/assets/platform.png";
+import background from "@/assets/map.png";
 import player from "@/assets/characters/player.png";
 import { PlayerMovement } from "./scripts/player/player-movement";
 
@@ -16,15 +15,16 @@ export class GameScene extends Scene {
     socket: Socket;
 
     // Variables
+    width: number = 1920;
+    height: number = 1080;
+
     playerId: string;
     speed: number = 100;
 
     // Assets
     background: Phaser.GameObjects.Image;
 
-    // Statics
-    platforms: Phaser.Physics.Arcade.StaticGroup;
-
+    // Inputs
     keys: any;
 
     // Players
@@ -37,11 +37,9 @@ export class GameScene extends Scene {
 
     preload() {
         this.load.image("background", background);
-        this.load.image("platform", platform);
         this.load.spritesheet("player", player, {
-            frameWidth: 96,
-            frameHeight: 96,
-            spacing: 0,
+            frameWidth: 192,
+            frameHeight: 192,
         });
     }
 
@@ -53,6 +51,11 @@ export class GameScene extends Scene {
             players.forEach((p: any) => {
                 if (p.playerId === this.socket.id) {
                     this.addPlayer(p);
+
+                    //  Set the camera and physics bounds to be the size of 4x4 bg images
+                    this.cameras.main.setBounds(0, 0, 1920 * 2, 1080 * 2);
+                    this.physics.world.setBounds(0, 0, 1920 * 2, 1080 * 2);
+                    this.cameras.main.startFollow(this.player, true);
                 } else {
                     this.addOtherPlayer(p);
                 }
@@ -95,13 +98,12 @@ export class GameScene extends Scene {
 
         // Oyuncu dünyanın sınırlarına çarpsın ve düşmesin diye ekledik
         this.player.setCollideWorldBounds(true);
-        this.physics.add.collider(this.player, this.platforms);
 
-        this.player.setSize(24, 32);
+        this.player.setSize(48, 64);
 
         this.player.setOffset(
-            this.player.width / 2 - 12, // x
-            this.player.height / 2 + 2 // y
+            this.player.width / 2 - 24, // x
+            this.player.height / 2 + 4 // y
         ); // Oyuncunun collider konumunu ayarlayın
 
         this.playerId = player.playerId;
@@ -116,13 +118,12 @@ export class GameScene extends Scene {
         this.otherPlayers.children.iterate((child: any) => {
             // Oyuncu dünyanın sınırlarına çarpsın ve düşmesin diye ekledik
             child.setCollideWorldBounds(true);
-            this.physics.add.collider(child, this.platforms);
 
-            child.setSize(24, 32);
+            child.setSize(48, 64);
 
             child.setOffset(
-                child.width / 2 - 12, // x
-                child.height / 2 + 2 // y
+                child.width / 2 - 24, // x
+                child.height / 2 + 4 // y
             ); // Oyuncunun collider konumunu ayarlayın
 
             child.playerId = player.playerId;
@@ -132,17 +133,8 @@ export class GameScene extends Scene {
     }
 
     gameScript() {
-        // Arka plan resmini ekledik
-        this.background = this.add.image(400, 300, "background");
-
-        // Zeminleri tutan statik bir fizik grubu oluşturduk
-        this.platforms = this.physics.add.staticGroup();
-
-        // Zeminleri oluşturduk
-        this.platforms.create(400, 568, "platform").setScale(2).refreshBody();
-        this.platforms.create(600, 400, "platform");
-        this.platforms.create(50, 250, "platform");
-        this.platforms.create(750, 220, "platform");
+        // tüm haritayı kaplayacak şekilde tilesprite ekliyoruz
+        this.add.tileSprite(0, 0, 1920 * 4, 1080 * 4, "background");
 
         // Yürüme ve idle animasyonlarını ekledik
         this.anims.create({

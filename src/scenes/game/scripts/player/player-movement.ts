@@ -3,7 +3,7 @@ import { Socket } from "socket.io-client";
 export class PlayerMovement {
     private player: Phaser.Physics.Arcade.Sprite | undefined;
     private keys: any;
-    private speed: number = 100;
+    private speed: number = 180;
     private socket: Socket;
     private direction: "left" | "right" | "idle" | "up" | "down" = "idle";
 
