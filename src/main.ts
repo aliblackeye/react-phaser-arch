@@ -1,9 +1,9 @@
 // Scenes
-import { Boot } from "@/game/Scenes/Boot";
-import { Preloader } from "@/game/Scenes/Preloader";
-import { MainMenu } from "@/game/Scenes/MainMenu/MainMenu";
-import { Game } from "@/game/Scenes/Game/Game";
-import { GameOver } from "@/game/Scenes/GameOver/GameOver";
+import { Boot } from "@/Scenes/Boot";
+import { Preloader } from "@/Scenes/Preloader";
+import { MainMenu } from "@/Scenes/MainMenu/MainMenu";
+import { Game } from "@/Scenes/Game/Game";
+import { GameOver } from "@/Scenes/GameOver/GameOver";
 
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Phaser.Types.Core.GameConfig = {
