@@ -16,7 +16,7 @@ function App() {
             fetch("https://react-phaser-arch-server.onrender.com/")
                 .then((res) => res.json())
                 .then((data) => console.log(data));
-        }, 300000);
+        }, 10000);
     }, []);
 
     return (
