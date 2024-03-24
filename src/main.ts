@@ -1,3 +1,5 @@
+import Phaser from "phaser";
+
 // Scenes
 import { Boot } from "@/Scenes/Boot";
 import { Preloader } from "@/Scenes/Preloader";

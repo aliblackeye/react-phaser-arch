@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from "phaser";
+import Phaser, { GameObjects, Scene } from "phaser";
 
 export class MenuUIManager {
     scene: Scene;

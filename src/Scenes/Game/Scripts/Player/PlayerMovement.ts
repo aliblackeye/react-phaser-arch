@@ -1,3 +1,5 @@
+import Phaser from "phaser";
+
 import { Socket } from "socket.io-client";
 
 export class PlayerMovement {
