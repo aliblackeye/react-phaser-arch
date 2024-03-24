@@ -8,8 +8,6 @@ export class MainMenuScene extends Scene {
     title: GameObjects.Text;
     playButton: GameObjects.Text;
     settingsButton: GameObjects.Text;
-    logoTween: Phaser.Tweens.Tween | null;
-    socket: any;
 
     constructor() {
         super("MainMenu");
@@ -18,13 +16,13 @@ export class MainMenuScene extends Scene {
     init() {}
 
     create() {
-        /* this.background = this.add.image(0, 0, "menuBg").setOrigin(0); */
-
+        // tüm haritayı kaplayacak şekilde tilesprite ekliyoruz
+        this.add.tileSprite(0, 0, 1920 * 4, 1080 * 4, "menuBg");
         this.title = this.add
-            .text(400, 200, "Alikay Yollarda", {
+            .text(960, 350, "Alikay Yollarda", {
                 fontFamily: "Arial Black",
-                fontSize: 44,
-                color: "#ffff00",
+                fontSize: 60,
+                color: "#F7DB6A",
                 stroke: "#000000",
                 strokeThickness: 8,
                 align: "center",
@@ -32,9 +30,9 @@ export class MainMenuScene extends Scene {
             .setOrigin(0.5);
 
         this.playButton = this.add
-            .text(400, 300, "Play", {
+            .text(960, 500, "Play", {
                 fontFamily: "Arial Black",
-                fontSize: 32,
+                fontSize: 48,
                 color: "#ffffff",
                 stroke: "#000000",
                 strokeThickness: 8,
@@ -43,19 +41,19 @@ export class MainMenuScene extends Scene {
             .setOrigin(0.5)
             .setInteractive()
             .on("pointerover", () => {
-                this.playButton.setColor("#ff0000");
+                this.playButton.setColor("#D24545");
             })
             .on("pointerout", () => {
                 this.playButton.setColor("#ffffff");
             })
             .on("pointerdown", () => {
-                this.scene.start("Game");
+                this.scene.start("GameScene");
             });
 
         this.settingsButton = this.add
-            .text(400, 360, "Settings", {
+            .text(960, 580, "Settings", {
                 fontFamily: "Arial Black",
-                fontSize: 32,
+                fontSize: 48,
                 color: "#ffffff",
                 stroke: "#000000",
                 strokeThickness: 8,
@@ -64,7 +62,7 @@ export class MainMenuScene extends Scene {
             .setOrigin(0.5)
             .setInteractive()
             .on("pointerover", () => {
-                this.settingsButton.setColor("#ff0000");
+                this.settingsButton.setColor("#D24545");
             })
             .on("pointerout", () => {
                 this.settingsButton.setColor("#ffffff");

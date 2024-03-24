@@ -32,7 +32,7 @@ export class GameScene extends Scene {
     otherPlayers: Phaser.Physics.Arcade.Group;
 
     constructor() {
-        super("Game");
+        super("GameScene");
     }
 
     preload() {
