@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 
 // Assets
-import menuBg from "@/assets/backgrounds/grass.png";
+import menuBg from "@/assets/grass.png";
 export class Boot extends Scene {
     constructor() {
         super("Boot");

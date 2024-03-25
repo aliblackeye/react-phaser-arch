@@ -3,8 +3,8 @@ import { Scene } from "phaser";
 import { Socket } from "socket.io-client";
 
 // Assets
-import grass from "@/assets/backgrounds/grass.png";
-import player from "@/assets/characters/player.png";
+import grass from "@/assets/grass.png";
+import player from "@/assets/player.png";
 
 // Scripts
 import { PlayerMovement } from "./Scripts/Player/PlayerMovement";
