@@ -1,7 +1,5 @@
 import { Scene } from "phaser";
 
-// Assets
-import menuBg from "@/assets/grass.png";
 export class Boot extends Scene {
     constructor() {
         super("Boot");
@@ -9,9 +7,7 @@ export class Boot extends Scene {
 
     preload() {
         // Boot Scene genellikle, bir oyun logosu veya arka plan gibi Preloader için gereken varlıkları yüklemek için kullanılır.
-
         // Varlıkların dosya boyutu ne kadar küçük olursa, Boot Sahnesi'nin kendisinin bir ön yükleyicisi olmadığı için o kadar iyi olur.
-        this.load.image("menuBg", menuBg);
     }
 
     create() {

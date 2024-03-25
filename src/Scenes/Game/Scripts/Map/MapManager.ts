@@ -11,8 +11,18 @@ export class MapManager {
         this.scene = scene;
     }
 
-    public initMap() {
+    initMap() {
         this.setBackgroundTilesprite();
+        this.setWorldBounds();
+    }
+
+    private setWorldBounds() {
+        this.scene.physics.world.setBounds(
+            0,
+            0,
+            this.MAP_WIDTH * 2,
+            this.MAP_HEIGHT * 2
+        );
     }
 
     private setBackgroundTilesprite() {
@@ -22,7 +32,7 @@ export class MapManager {
             0,
             this.MAP_WIDTH * 4,
             this.MAP_HEIGHT * 4,
-            "background"
+            "grass"
         );
     }
 }

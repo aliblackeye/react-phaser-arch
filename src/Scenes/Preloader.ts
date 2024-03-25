@@ -1,5 +1,7 @@
 import { Scene } from "phaser";
 
+// Assets
+import grass from "@/assets/grass.png";
 export class Preloader extends Scene {
     constructor() {
         super("Preloader");
@@ -7,13 +9,11 @@ export class Preloader extends Scene {
 
     init() {
         // Boot Scene'de bu resmi yüklediğimiz için burada görüntüleyebiliriz
-        this.add.image(0, 0, "menuBg").setOrigin(0);
-
-        this.load.html("form", "@/ui/form.html");
     }
 
     preload() {
         //  Oyun için varlıkları yükleyin - Kendi varlıklarınızla değiştirin
+        this.load.image("grass", grass);
     }
 
     create() {

@@ -1,6 +1,5 @@
 import Phaser, { Scene } from "phaser";
 
-import { Socket } from "socket.io-client";
 import { PlayerManager } from "./PlayerManager";
 import { GlobalSocket } from "@/GlobalSocket";
 
@@ -18,8 +17,7 @@ export class PlayerMovement {
     }
 
     playerMovement() {
-        if (!PlayerManager.player) return;
-        console.log("Player Movement");
+        if (!PlayerManager.getPlayer()) return;
 
         const { keys } = this;
         const { left, right, up, down, w, a, s, d } = keys;
@@ -51,14 +49,14 @@ export class PlayerMovement {
     }
 
     private setPlayerVelocity(velocityX: number, velocityY: number) {
-        const player = PlayerManager.player;
+        const player = PlayerManager.getPlayer();
         if (player) {
             player.setVelocity(velocityX, velocityY);
         }
     }
 
     private playPlayerAnimation(velocity: { x: number; y: number }) {
-        const player = PlayerManager.player;
+        const player = PlayerManager.getPlayer();
         if (!player) return;
 
         const { x, y } = velocity;
@@ -89,7 +87,7 @@ export class PlayerMovement {
     }
 
     private updatePlayerPosition() {
-        const player = PlayerManager.player;
+        const player = PlayerManager.getPlayer();
         if (!player) return;
 
         const { x, y } = player;

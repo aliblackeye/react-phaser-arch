@@ -1,6 +1,5 @@
-import { GlobalSocket } from "@/GlobalSocket";
+import { PlayerManager } from "@/Scenes/Game/Scripts/Player/PlayerManager";
 import Phaser, { GameObjects, Scene } from "phaser";
-import { Socket } from "socket.io-client";
 
 export class MenuUIManager {
     scene: Scene;
@@ -19,6 +18,8 @@ export class MenuUIManager {
     // Constants
     static readonly UI_COLOR = "#ffffff";
     static readonly HOVER_COLOR = "#D24545";
+    private readonly MAP_WIDTH: number = 1920;
+    private readonly MAP_HEIGHT: number = 1080;
 
     constructor(scene: Scene) {
         this.scene = scene;
@@ -52,7 +53,13 @@ export class MenuUIManager {
     }
 
     private createBackground() {
-        this.scene.add.tileSprite(0, 0, 1920 * 4, 1080 * 4, "menuBg");
+        this.scene.add.tileSprite(
+            0,
+            0,
+            this.MAP_WIDTH * 4,
+            this.MAP_HEIGHT * 4,
+            "grass"
+        );
     }
 
     private createTitle() {
@@ -79,19 +86,15 @@ export class MenuUIManager {
             "playerNameInput"
         ) as HTMLInputElement;
         inputElement.addEventListener("input", (event) => {
-            const value = (event.target as HTMLInputElement).value;
-            this.playerName = value;
+            const value = (event.target as HTMLInputElement).value.trim();
+            PlayerManager.setPlayerName(value);
         });
     }
 
     private createPlayButton() {
         this.playButton = this.createButton(960, 550, "Play", () => {
-            if (this.playerName.length > 0) {
-                GlobalSocket.socket.emit("joinGame", this.playerName);
-                this.scene.scene.start("Game", {
-                    playerName: this.playerName,
-                    socket: GlobalSocket.socket,
-                });
+            if (PlayerManager.getPlayerName().length > 0) {
+                this.scene.scene.start("Game");
             } else {
                 alert("Please enter a nickname to play!");
             }

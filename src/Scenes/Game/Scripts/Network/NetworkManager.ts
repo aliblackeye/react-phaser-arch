@@ -5,9 +5,11 @@ import { GlobalSocket } from "@/GlobalSocket";
 
 export class NetworkManager {
     private scene: Scene;
+    private playerSpawner: PlayerSpawner;
 
-    constructor(scene: Scene, private playerSpawner: PlayerSpawner) {
+    constructor(scene: Scene) {
         this.scene = scene;
+        this.playerSpawner = new PlayerSpawner(scene);
     }
 
     listen() {
@@ -20,24 +22,15 @@ export class NetworkManager {
     private onCurrentPlayersChanged() {
         GlobalSocket.socket.on("currentPlayers", (players: any[]) => {
             console.log("Current players: ", players);
-            players.forEach((player: any) => {
-                if (player.playerId === GlobalSocket.socket.id) {
-                    this.playerSpawner.spawnPlayer(player);
-
-                    //  Set the camera and physics bounds to be the size of 4x4 bg images
-                    this.scene.cameras.main.setBounds(0, 0, 1920 * 2, 1080 * 2);
-                    this.scene.physics.world.setBounds(
-                        0,
-                        0,
-                        1920 * 2,
-                        1080 * 2
-                    );
+            players.forEach((p: any) => {
+                if (p.id === GlobalSocket.socket.id) {
+                    this.playerSpawner.spawnPlayer(p);
                     this.scene.cameras.main.startFollow(
-                        PlayerManager.player,
+                        PlayerManager.getPlayer(),
                         true
                     );
                 } else {
-                    this.playerSpawner.spawnOtherPlayer(player);
+                    this.playerSpawner.spawnOtherPlayer(p);
                 }
             });
         });
@@ -52,14 +45,14 @@ export class NetworkManager {
 
     private onPlayerLeft() {
         GlobalSocket.socket.on("playerLeft", (playerId: string) => {
-            console.log("Player disconnected: ", playerId);
-            this.playerSpawner.otherPlayers
+            console.log(playerId);
+            const playerToRemove = this.playerSpawner.otherPlayers
                 .getChildren()
-                .forEach((otherPlayer: any) => {
-                    if (playerId === otherPlayer.playerId) {
-                        otherPlayer.destroy();
-                    }
+                .find((otherPlayer: any) => {
+                    console.log(otherPlayer.playerId);
+                    return otherPlayer.playerId === playerId;
                 });
+            playerToRemove?.destroy();
         });
     }
 

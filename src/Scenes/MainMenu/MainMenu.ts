@@ -2,7 +2,17 @@ import Phaser, { Scene } from "phaser";
 import { MenuUIManager } from "./Scripts/UI/MenuUIManager";
 import { GlobalSocket } from "@/GlobalSocket";
 
+// Assets
+import grass from "@/assets/grass.png";
+import player from "@/assets/player.png";
+
+// Scripts
+import { NetworkManager } from "../Game/Scripts/Network/NetworkManager";
+
 export class MainMenu extends Scene {
+    // Scripts
+    networkManager: NetworkManager;
+
     // Assets
     background: Phaser.GameObjects.Image;
 
@@ -18,10 +28,18 @@ export class MainMenu extends Scene {
 
     init() {
         GlobalSocket.connect(import.meta.env.VITE_SOCKET_URL as string);
+
+        this.menuUIManager = new MenuUIManager(this);
+    }
+
+    preload() {
+        this.load.spritesheet("player", player, {
+            frameWidth: 192,
+            frameHeight: 192,
+        });
     }
 
     create() {
-        this.menuUIManager = new MenuUIManager(this);
         this.menuUIManager.createUI();
 
         // EventBus.emit("current-scene-ready", this);

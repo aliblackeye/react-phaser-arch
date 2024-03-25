@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import { PlayerManager } from "./PlayerManager";
 
 export class PlayerSpawner {
     private scene: Scene;
@@ -9,29 +10,27 @@ export class PlayerSpawner {
         this.otherPlayers = this.scene.physics.add.group();
     }
 
-    spawnPlayer(player: any) {
-        const localPlayer = this.scene.physics.add.sprite(
-            player.x,
-            player.y,
-            "player"
-        );
-
+    spawnPlayer(p: any) {
+        const localPlayer = this.scene.physics.add.sprite(p.x, p.y, "player");
         this.configurePlayer(localPlayer);
+
+        // Set the player id
+        PlayerManager.setPlayer(localPlayer, p.id, p.name);
     }
 
-    spawnOtherPlayer(player: any) {
-        const otherPlayer = this.otherPlayers.create(
-            player.x,
-            player.y,
-            "player"
-        );
+    spawnOtherPlayer(p: any) {
+        const otherPlayer = this.otherPlayers.create(p.x, p.y, "player");
+        otherPlayer.playerId = p.id;
         this.configurePlayer(otherPlayer);
     }
 
     private configurePlayer(player: Phaser.Physics.Arcade.Sprite) {
         player.setCollideWorldBounds(true);
         player.setSize(48, 64);
-        player.setOffset(24, 32); // Collider offset
+        player.setOffset(
+            player.width / 2 - 24, // x
+            player.height / 2 + 4 // y
+        ); // y); // Collider offset
     }
 }
 
