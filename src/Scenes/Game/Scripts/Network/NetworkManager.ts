@@ -1,5 +1,5 @@
 import { PlayerSpawner } from "../Player/PlayerSpawner";
-import { Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 import { PlayerManager } from "../Player/PlayerManager";
 import { GlobalSocket } from "@/GlobalSocket";
 
@@ -38,18 +38,15 @@ export class NetworkManager {
 
     private onPlayerJoined() {
         GlobalSocket.socket.on("newPlayer", (player: any) => {
-            console.log(player);
             this.playerSpawner.spawnOtherPlayer(player);
         });
     }
 
     private onPlayerLeft() {
         GlobalSocket.socket.on("playerLeft", (playerId: string) => {
-            console.log(playerId);
             const playerToRemove = this.playerSpawner.otherPlayers
                 .getChildren()
                 .find((otherPlayer: any) => {
-                    console.log(otherPlayer.playerId);
                     return otherPlayer.playerId === playerId;
                 });
             playerToRemove?.destroy();
@@ -58,13 +55,15 @@ export class NetworkManager {
 
     private onPlayerMoved() {
         GlobalSocket.socket.on("playerMovement", (player: any) => {
-            this.playerSpawner.otherPlayers
+            const otherPlayer = this.playerSpawner.otherPlayers
                 .getChildren()
-                .forEach((otherPlayer: any) => {
-                    if (otherPlayer.playerId === player.playerId) {
-                        otherPlayer.setPosition(player.x, player.y);
-                    }
-                });
+                .find(
+                    (p: any) => p.playerId === player.id
+                ) as GameObjects.Sprite;
+
+            if (otherPlayer) {
+                otherPlayer?.setPosition(player.x, player.y);
+            }
         });
     }
 }
