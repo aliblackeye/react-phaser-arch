@@ -1,13 +1,10 @@
-import { GameObjects, Scene } from "phaser";
-import { Socket, io } from "socket.io-client";
+import Phaser, { Scene } from "phaser";
 import { MenuUIManager } from "./Scripts/UI/MenuUIManager";
+import { GlobalSocket } from "@/GlobalSocket";
 
 export class MainMenu extends Scene {
-    // Socket
-    socket: Socket;
-
     // Assets
-    background: GameObjects.Image;
+    background: Phaser.GameObjects.Image;
 
     // UI Manager
     menuUIManager: MenuUIManager;
@@ -19,14 +16,11 @@ export class MainMenu extends Scene {
         super("MainMenu");
     }
 
-    init(data: any) {
-        console.log("init", data);
+    init() {
+        GlobalSocket.connect(import.meta.env.VITE_SOCKET_URL as string);
     }
 
     create() {
-        const socket = io(import.meta.env.VITE_SOCKET_URL as string);
-        this.socket = socket;
-
         this.menuUIManager = new MenuUIManager(this);
         this.menuUIManager.createUI();
 
@@ -38,7 +32,7 @@ export class MainMenu extends Scene {
     }
 
     private updateUIVisibility() {
-        if (this.socket.connected) {
+        if (GlobalSocket.socket.connected) {
             this.serverOnline = true;
             this.menuUIManager.showOnlineUI();
         } else {

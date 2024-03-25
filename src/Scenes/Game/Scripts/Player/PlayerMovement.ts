@@ -1,25 +1,25 @@
-import Phaser from "phaser";
+import Phaser, { Scene } from "phaser";
 
 import { Socket } from "socket.io-client";
+import { PlayerManager } from "./PlayerManager";
+import { GlobalSocket } from "@/GlobalSocket";
 
 export class PlayerMovement {
-    private player: Phaser.Physics.Arcade.Sprite | undefined;
-    private keys: any;
+    private scene: Scene;
+
+    // Movement
     private speed: number = 180;
-    private socket: Socket;
+    private keys: any;
     private direction: "left" | "right" | "idle" | "up" | "down" = "idle";
 
-    constructor(socket: Socket) {
-        this.socket = socket;
+    constructor(scene: Scene) {
+        this.scene = scene;
+        this.setKeys();
     }
 
-    public setPlayer(player: Phaser.Physics.Arcade.Sprite, keys: any) {
-        this.player = player;
-        this.keys = keys;
-    }
-
-    public movementController() {
-        if (!this.player || !this.keys) return;
+    playerMovement() {
+        if (!PlayerManager.player) return;
+        console.log("Player Movement");
 
         const { keys } = this;
         const { left, right, up, down, w, a, s, d } = keys;
@@ -51,13 +51,14 @@ export class PlayerMovement {
     }
 
     private setPlayerVelocity(velocityX: number, velocityY: number) {
-        if (this.player) {
-            this.player.setVelocity(velocityX, velocityY);
+        const player = PlayerManager.player;
+        if (player) {
+            player.setVelocity(velocityX, velocityY);
         }
     }
 
     private playPlayerAnimation(velocity: { x: number; y: number }) {
-        const player = this.player;
+        const player = PlayerManager.player;
         if (!player) return;
 
         const { x, y } = velocity;
@@ -88,17 +89,30 @@ export class PlayerMovement {
     }
 
     private updatePlayerPosition() {
-        const player = this.player;
+        const player = PlayerManager.player;
         if (!player) return;
 
         const { x, y } = player;
 
         const oldPosition = player.getData("oldPosition");
         if (oldPosition && (x !== oldPosition.x || y !== oldPosition.y)) {
-            this.socket.emit("playerMovement", { x, y });
+            GlobalSocket.socket.emit("playerMovement", { x, y });
         }
 
         player.setData("oldPosition", { x, y });
+    }
+
+    private setKeys() {
+        this.keys = this.scene.input.keyboard!.addKeys({
+            left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+            right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+            up: Phaser.Input.Keyboard.KeyCodes.UP,
+            down: Phaser.Input.Keyboard.KeyCodes.DOWN,
+            w: Phaser.Input.Keyboard.KeyCodes.W,
+            a: Phaser.Input.Keyboard.KeyCodes.A,
+            s: Phaser.Input.Keyboard.KeyCodes.S,
+            d: Phaser.Input.Keyboard.KeyCodes.D,
+        });
     }
 }
 

@@ -1,4 +1,6 @@
+import { GlobalSocket } from "@/GlobalSocket";
 import Phaser, { GameObjects, Scene } from "phaser";
+import { Socket } from "socket.io-client";
 
 export class MenuUIManager {
     scene: Scene;
@@ -85,7 +87,11 @@ export class MenuUIManager {
     private createPlayButton() {
         this.playButton = this.createButton(960, 550, "Play", () => {
             if (this.playerName.length > 0) {
-                this.scene.scene.start("Game", { playerName: this.playerName });
+                GlobalSocket.socket.emit("joinGame", this.playerName);
+                this.scene.scene.start("Game", {
+                    playerName: this.playerName,
+                    socket: GlobalSocket.socket,
+                });
             } else {
                 alert("Please enter a nickname to play!");
             }
