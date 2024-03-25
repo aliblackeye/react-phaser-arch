@@ -9,6 +9,8 @@ import { GlobalSocket } from "@/GlobalSocket";
 import { NetworkManager } from "./Scripts/Network/NetworkManager";
 import { PlayerManager } from "./Scripts/Player/PlayerManager";
 import { CameraManager } from "./Scripts/Camera/CameraManager";
+import { GameUIManager } from "./Scripts/UI/GameUIManager";
+import { PlayerSpawner } from "./Scripts/Player/PlayerSpawner";
 
 export class Game extends Scene {
     // Scripts
@@ -17,6 +19,8 @@ export class Game extends Scene {
     private playerAnimations: PlayerAnimations;
     private networkManager: NetworkManager;
     private cameraManager: CameraManager;
+    private gameUIManager: GameUIManager;
+    private playerSpawner: PlayerSpawner;
 
     constructor() {
         super("Game");
@@ -28,11 +32,16 @@ export class Game extends Scene {
         this.cameraManager = new CameraManager(this);
         this.cameraManager.setCameraBounds();
 
+        this.playerAnimations = new PlayerAnimations(this);
+        this.playerAnimations.createAnimations();
+
+        this.playerSpawner = new PlayerSpawner(this);
+
         this.networkManager = new NetworkManager(this);
         this.networkManager.listen();
 
-        this.playerAnimations = new PlayerAnimations(this);
-        this.playerAnimations.createAnimations();
+        this.gameUIManager = new GameUIManager(this);
+        this.gameUIManager.create();
 
         this.playerMovement = new PlayerMovement(this);
 
